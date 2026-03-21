@@ -101,7 +101,7 @@ export function GuidedFlow({ onComplete, onBack }: GuidedFlowProps) {
                               {preset.name}
                             </div>
                             <div
-                              className="mt-1 text-[10px] leading-snug opacity-60"
+                              className="mt-1 text-[10px] leading-snug opacity-60 line-clamp-1"
                               style={{ color: colors.text, fontFamily: typography.bodyFont }}
                             >
                               {preset.description}

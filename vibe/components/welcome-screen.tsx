@@ -5,14 +5,15 @@ import { PRESETS } from "@/lib/presets";
 import type { Preset } from "@/lib/presets";
 import type { PresetId } from "@/lib/types";
 
-const GALLERY_PRESETS: PresetId[] = ["neon", "editorial", "candy", "brutalist", "luxury", "playful"];
+const GALLERY_PRESETS: PresetId[] = ["neon", "editorial", "brutalist", "candy", "luxury", "organic", "cyberpunk", "handcraft", "monochrome"];
 
 interface WelcomeScreenProps {
   onStartGuided: () => void;
   onSkip: () => void;
+  onSelectPreset: (id: PresetId) => void;
 }
 
-function GalleryCard({ preset, delay }: { preset: Preset; delay: number }) {
+function GalleryCard({ preset, delay, onClick }: { preset: Preset; delay: number; onClick: () => void }) {
   const { colors, typography, shape, components } = preset.values;
   const isFilled = components.buttonStyle === "filled";
   const [visible, setVisible] = useState(false);
@@ -23,8 +24,9 @@ function GalleryCard({ preset, delay }: { preset: Preset; delay: number }) {
   }, [delay]);
 
   return (
-    <div
-      className="flex flex-col justify-between overflow-hidden p-5 transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-xl"
+    <button
+      onClick={onClick}
+      className="flex flex-col justify-between overflow-hidden p-5 transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-xl cursor-pointer text-left w-full"
       style={{
         backgroundColor: colors.background,
         borderRadius: `${Math.max(shape.borderRadius, 8)}px`,
@@ -72,11 +74,11 @@ function GalleryCard({ preset, delay }: { preset: Preset; delay: number }) {
       >
         Get started
       </div>
-    </div>
+    </button>
   );
 }
 
-export function WelcomeScreen({ onStartGuided, onSkip }: WelcomeScreenProps) {
+export function WelcomeScreen({ onStartGuided, onSkip, onSelectPreset }: WelcomeScreenProps) {
   const presets = GALLERY_PRESETS.map((id) => PRESETS.find((p) => p.id === id)!);
   const [headerVisible, setHeaderVisible] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
@@ -101,14 +103,14 @@ export function WelcomeScreen({ onStartGuided, onSkip }: WelcomeScreenProps) {
           Vibe
         </div>
         <p className="mb-8 text-center text-sm text-white/50">
-          Design language generator for vibe coders
+          Pick a style, and get the prompt for the design
         </p>
       </div>
 
       {/* Gallery grid — cards stagger in */}
       <div className="mb-10 grid w-full max-w-2xl grid-cols-2 gap-3 md:grid-cols-3">
         {presets.map((preset, i) => (
-          <GalleryCard key={preset.id} preset={preset} delay={150 + i * 100} />
+          <GalleryCard key={preset.id} preset={preset} delay={150 + i * 100} onClick={() => onSelectPreset(preset.id)} />
         ))}
       </div>
 
@@ -122,16 +124,15 @@ export function WelcomeScreen({ onStartGuided, onSkip }: WelcomeScreenProps) {
       >
         <button
           onClick={onStartGuided}
-          className="rounded-lg bg-white px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-white/90"
+          className="rounded-lg border border-white/15 px-6 py-3 text-sm text-white/50 transition-colors hover:border-white/30 hover:text-white/80"
         >
-          Guide me
-          <span className="ml-2 text-xs font-normal text-black/50">— 2 quick questions</span>
+          Get more styles
         </button>
         <button
           onClick={onSkip}
-          className="rounded-lg border border-white/15 px-6 py-3 text-sm text-white/50 transition-colors hover:border-white/30 hover:text-white/80"
+          className="py-2 text-xs text-white/25 transition-colors hover:text-white/50"
         >
-          I know what I want
+          Start fresh
         </button>
         <p className="mt-2 text-center text-[11px] text-white/20">by Upcurious</p>
       </div>

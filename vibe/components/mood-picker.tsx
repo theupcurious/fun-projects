@@ -64,7 +64,7 @@ export function MoodPicker({ selectedId, onSelect }: MoodPickerProps) {
                       {preset.name}
                     </div>
                     <div
-                      className="mt-0.5 text-[9px] leading-snug opacity-70"
+                      className="mt-0.5 text-[9px] leading-snug opacity-70 line-clamp-1"
                       style={{
                         color: colors.text,
                         fontFamily: typography.bodyFont,

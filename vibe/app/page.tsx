@@ -140,6 +140,7 @@ export default function Page() {
         <WelcomeScreen
           onStartGuided={() => setView("guided")}
           onSkip={() => setView("editor")}
+          onSelectPreset={(id) => { selectPreset(id); setView("editor"); }}
         />
       </div>
     );
