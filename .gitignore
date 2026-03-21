@@ -1,0 +1,16 @@
+brainstorm.md
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# OS
+.DS_Store
