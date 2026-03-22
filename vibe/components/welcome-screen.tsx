@@ -90,51 +90,68 @@ export function WelcomeScreen({ onStartGuided, onSkip, onSelectPreset }: Welcome
   }, []);
 
   return (
-    <div className="flex h-full flex-col items-center overflow-y-auto bg-[#0d0d0d] px-6 py-10">
-      {/* Branding — fades in first */}
-      <div
-        className="transition-all duration-700 ease-out"
-        style={{
-          opacity: headerVisible ? 1 : 0,
-          transform: headerVisible ? "none" : "translateY(-10px)",
-        }}
-      >
-        <div className="mb-1 text-center text-3xl font-bold tracking-tight text-white">
-          Vibe
+    <div className="flex h-full flex-col bg-[#0d0d0d]">
+      {/* Scrollable content */}
+      <div className="flex flex-1 flex-col items-center overflow-y-auto px-6 py-10">
+        {/* Branding — fades in first */}
+        <div
+          className="transition-all duration-700 ease-out"
+          style={{
+            opacity: headerVisible ? 1 : 0,
+            transform: headerVisible ? "none" : "translateY(-10px)",
+          }}
+        >
+          <p className="mb-2 text-center text-[11px] uppercase tracking-[0.3em] text-white/35">
+            Upcurious Presents
+          </p>
+          <div className="mb-1 text-center text-3xl font-bold tracking-tight text-white">
+            Vibe
+          </div>
+          <p className="mb-8 text-center text-sm text-white/50">
+            Pick a style, and get the prompt for the design
+          </p>
         </div>
-        <p className="mb-8 text-center text-sm text-white/50">
-          Pick a style, and get the prompt for the design
-        </p>
+
+        {/* Gallery grid — cards stagger in */}
+        <div className="mb-10 grid w-full max-w-2xl grid-cols-2 gap-3 md:grid-cols-3">
+          {presets.map((preset, i) => (
+            <GalleryCard key={preset.id} preset={preset} delay={150 + i * 100} onClick={() => onSelectPreset(preset.id)} />
+          ))}
+        </div>
+
+        {/* CTAs — fade in after cards */}
+        <div
+          className="flex w-full max-w-xs flex-col gap-2.5 transition-all duration-700 ease-out"
+          style={{
+            opacity: ctaVisible ? 1 : 0,
+            transform: ctaVisible ? "none" : "translateY(10px)",
+          }}
+        >
+          <button
+            onClick={onStartGuided}
+            className="rounded-lg border border-white/15 px-6 py-3 text-sm text-white/50 transition-colors hover:border-white/30 hover:text-white/80"
+          >
+            Get more styles
+          </button>
+          <button
+            onClick={onSkip}
+            className="py-2 text-xs text-white/25 transition-colors hover:text-white/50"
+          >
+            Start fresh
+          </button>
+        </div>
       </div>
 
-      {/* Gallery grid — cards stagger in */}
-      <div className="mb-10 grid w-full max-w-2xl grid-cols-2 gap-3 md:grid-cols-3">
-        {presets.map((preset, i) => (
-          <GalleryCard key={preset.id} preset={preset} delay={150 + i * 100} onClick={() => onSelectPreset(preset.id)} />
-        ))}
-      </div>
-
-      {/* CTAs — fade in after cards */}
-      <div
-        className="flex w-full max-w-xs flex-col gap-2.5 transition-all duration-700 ease-out"
-        style={{
-          opacity: ctaVisible ? 1 : 0,
-          transform: ctaVisible ? "none" : "translateY(10px)",
-        }}
-      >
-        <button
-          onClick={onStartGuided}
-          className="rounded-lg border border-white/15 px-6 py-3 text-sm text-white/50 transition-colors hover:border-white/30 hover:text-white/80"
+      {/* Always-visible Upcurious footer */}
+      <div className="shrink-0 py-4 text-center">
+        <a
+          href="https://theupcurious.com"
+          target="_blank"
+          rel="noreferrer"
+          className="text-xs tracking-[0.2em] text-white/30 transition-colors hover:text-white/60"
         >
-          Get more styles
-        </button>
-        <button
-          onClick={onSkip}
-          className="py-2 text-xs text-white/25 transition-colors hover:text-white/50"
-        >
-          Start fresh
-        </button>
-        <p className="mt-2 text-center text-[11px] text-white/20">by Upcurious</p>
+          by Upcurious
+        </a>
       </div>
     </div>
   );
