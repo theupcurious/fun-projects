@@ -1,10 +1,12 @@
 "use client";
 
 import type { DesignLanguage } from "@/lib/types";
+import { previewContent } from "@/lib/design-brief";
 import { getButtonStyles } from "./preview-styles";
 
 export function PreviewHero({ lang }: { lang: DesignLanguage }) {
   const { colors, shape } = lang;
+  const content = previewContent(lang);
 
   const primaryBtn = getButtonStyles(lang);
   const outlineBtn: React.CSSProperties = {
@@ -43,7 +45,7 @@ export function PreviewHero({ lang }: { lang: DesignLanguage }) {
           textTransform: "uppercase" as const,
         }}
       >
-        New — Design Language Tool
+        {content.badge}
       </div>
 
       <h1
@@ -60,7 +62,7 @@ export function PreviewHero({ lang }: { lang: DesignLanguage }) {
           margin: "0 auto 20px",
         }}
       >
-        Every great product starts with a design language
+        {content.headline}
       </h1>
 
       <p
@@ -72,15 +74,14 @@ export function PreviewHero({ lang }: { lang: DesignLanguage }) {
           fontSize: "1.05em",
         }}
       >
-        Stop building with the same AI defaults. Define your palette, typography,
-        and component style — then export a prompt that makes your tools follow your vision.
+        {content.subhead}
       </p>
 
       <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
         <button style={{ ...primaryBtn, padding: "10px 24px", fontSize: "0.9em", cursor: "pointer" }}>
-          Start building
+          {content.primaryCta}
         </button>
-        <button style={{ ...outlineBtn }}>See examples</button>
+        <button style={{ ...outlineBtn }}>{content.secondaryCta}</button>
       </div>
     </section>
   );

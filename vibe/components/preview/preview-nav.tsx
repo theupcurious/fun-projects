@@ -1,10 +1,12 @@
 "use client";
 
 import type { DesignLanguage } from "@/lib/types";
+import { previewContent } from "@/lib/design-brief";
 import { getButtonStyles } from "./preview-styles";
 
 export function PreviewNav({ lang }: { lang: DesignLanguage }) {
   const { colors, shape } = lang;
+  const content = previewContent(lang);
   const spacing = parseFloat(String(lang.shape.spacingDensity === "compact" ? "12" : lang.shape.spacingDensity === "generous" ? "24" : "18"));
   const btnStyle = getButtonStyles(lang);
 
@@ -34,12 +36,12 @@ export function PreviewNav({ lang }: { lang: DesignLanguage }) {
           fontStyle: "var(--vp-heading-style)" as React.CSSProperties["fontStyle"],
         }}
       >
-        Studio
+        {content.brand}
       </div>
 
       {/* Nav links */}
       <div style={{ display: "flex", gap: spacing + "px", alignItems: "center" }}>
-        {["Work", "About", "Journal"].map((item) => (
+        {content.nav.map((item) => (
           <a
             key={item}
             href="#"
@@ -53,9 +55,8 @@ export function PreviewNav({ lang }: { lang: DesignLanguage }) {
             {lang.components.linkTreatment === "arrow" && " →"}
           </a>
         ))}
-        <button style={{ ...btnStyle, fontSize: "0.8em" }}>Get started</button>
+        <button style={{ ...btnStyle, fontSize: "0.8em" }}>{content.navCta}</button>
       </div>
     </nav>
   );
 }
-

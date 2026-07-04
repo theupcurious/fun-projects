@@ -1,9 +1,11 @@
 "use client";
 
 import type { DesignLanguage } from "@/lib/types";
+import { previewContent } from "@/lib/design-brief";
 
 export function PreviewFooter({ lang }: { lang: DesignLanguage }) {
   const { colors, shape } = lang;
+  const content = previewContent(lang);
 
   return (
     <footer
@@ -29,11 +31,11 @@ export function PreviewFooter({ lang }: { lang: DesignLanguage }) {
           letterSpacing: "var(--vp-letter-spacing)",
         }}
       >
-        Studio
+        {content.brand}
       </div>
 
       <div style={{ display: "flex", gap: "20px" }}>
-        {["Privacy", "Terms", "Contact"].map((link) => (
+        {content.footerLinks.map((link) => (
           <a
             key={link}
             href="#"
@@ -50,7 +52,7 @@ export function PreviewFooter({ lang }: { lang: DesignLanguage }) {
       </div>
 
       <div style={{ color: colors.textMuted, fontSize: "0.78em" }}>
-        © 2026 Studio. All rights reserved.
+        © 2026 {content.brand}. All rights reserved.
       </div>
     </footer>
   );

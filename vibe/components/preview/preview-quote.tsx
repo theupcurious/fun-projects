@@ -1,9 +1,11 @@
 "use client";
 
 import type { DesignLanguage } from "@/lib/types";
+import { previewContent } from "@/lib/design-brief";
 
 export function PreviewQuote({ lang }: { lang: DesignLanguage }) {
   const { colors, shape } = lang;
+  const content = previewContent(lang);
 
   return (
     <section
@@ -31,7 +33,7 @@ export function PreviewQuote({ lang }: { lang: DesignLanguage }) {
           letterSpacing: "var(--vp-letter-spacing)",
         }}
       >
-        &ldquo;The details are not the details. They make the design.&rdquo;
+        &ldquo;{content.quote}&rdquo;
       </div>
       <div
         style={{
@@ -41,7 +43,7 @@ export function PreviewQuote({ lang }: { lang: DesignLanguage }) {
           textTransform: "uppercase" as const,
         }}
       >
-        — Charles Eames
+        — {content.quoteBy}
       </div>
     </section>
   );

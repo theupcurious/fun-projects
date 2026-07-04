@@ -2,24 +2,9 @@
 
 import type { DesignLanguage } from "@/lib/types";
 import { SHADOW_CSS_MAP } from "@/lib/types";
+import { previewContent } from "@/lib/design-brief";
 
-const CARDS = [
-  {
-    icon: "◈",
-    title: "Design tokens",
-    body: "Define your palette, spacing, and typography as tokens that cascade through every component.",
-  },
-  {
-    icon: "⊕",
-    title: "Live preview",
-    body: "See your design language applied to a real template in real time as you make changes.",
-  },
-  {
-    icon: "⊞",
-    title: "Export prompt",
-    body: "Copy a structured prompt for Cursor, Claude, or ChatGPT that overrides the AI defaults.",
-  },
-];
+const ICONS = ["◈", "⊕", "⊞"];
 
 function getCardStyle(lang: DesignLanguage): React.CSSProperties {
   const { colors, shape } = lang;
@@ -60,6 +45,7 @@ function getCardStyle(lang: DesignLanguage): React.CSSProperties {
 export function PreviewCards({ lang }: { lang: DesignLanguage }) {
   const { colors, shape } = lang;
   const cardStyle = getCardStyle(lang);
+  const content = previewContent(lang);
 
   return (
     <section
@@ -84,7 +70,7 @@ export function PreviewCards({ lang }: { lang: DesignLanguage }) {
           marginBottom: "32px",
         }}
       >
-        Everything you need
+        {content.sectionTitle}
       </h2>
 
       <div
@@ -96,7 +82,7 @@ export function PreviewCards({ lang }: { lang: DesignLanguage }) {
           margin: "0 auto",
         }}
       >
-        {CARDS.map((card) => (
+        {content.cards.map((card, index) => (
           <div key={card.title} style={{ ...cardStyle, padding: `calc(20px * var(--vp-spacing))` }}>
             <div
               style={{
@@ -105,7 +91,7 @@ export function PreviewCards({ lang }: { lang: DesignLanguage }) {
                 marginBottom: "12px",
               }}
             >
-              {card.icon}
+              {ICONS[index] ?? "◈"}
             </div>
             <h3
               style={{

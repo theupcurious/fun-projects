@@ -11,6 +11,7 @@ import { TypographySection } from "@/components/controls/typography-section";
 import { ShapeSection } from "@/components/controls/shape-section";
 import { ComponentSection } from "@/components/controls/component-section";
 import { ThemeSection } from "@/components/controls/theme-section";
+import { BriefSection } from "@/components/controls/brief-section";
 import { PreviewFrame } from "@/components/preview/preview-frame";
 import { PreviewNav } from "@/components/preview/preview-nav";
 import { PreviewHero } from "@/components/preview/preview-hero";
@@ -22,9 +23,11 @@ import { ExportBar } from "@/components/export-bar";
 import { FontLoader } from "@/components/font-loader";
 import { WelcomeScreen } from "@/components/welcome-screen";
 import { GuidedFlow } from "@/components/guided-flow";
+import { LanguageSummary } from "@/components/language-summary";
 import { cn } from "@/lib/utils";
 import { invertPalette } from "@/lib/contrast";
 import { getColorVariants, getTypographyVariants } from "@/lib/variants";
+import { getBrief, toneForPreset } from "@/lib/design-brief";
 
 type CustomizeSection = "color" | "type" | "shape" | "components" | "theme";
 
@@ -68,6 +71,7 @@ function SectionHeader({
 export default function Page() {
   const { state: lang, set: setLang, undo, redo, canUndo, canRedo } = useHistory<DesignLanguage>(DEFAULT_DESIGN);
   const [showCustomize, setShowCustomize] = useState(false);
+  const [showDirections, setShowDirections] = useState(false);
   const [openCustomizeSection, setOpenCustomizeSection] = useState<CustomizeSection | null>(null);
   const [mobileTab, setMobileTab] = useState<"controls" | "preview">("controls");
 
@@ -77,11 +81,13 @@ export default function Page() {
   useEffect(() => {
     const fromUrl = readDesignFromUrl();
     if (fromUrl) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLang(fromUrl);
-      setView("editor");
+      const timer = window.setTimeout(() => {
+        setLang(fromUrl);
+        setView("editor");
+      }, 0);
+      return () => window.clearTimeout(timer);
     }
-  }, []);
+  }, [setLang]);
 
   useEffect(() => {
     if (process.env.NODE_ENV !== "development") return;
@@ -104,7 +110,14 @@ export default function Page() {
   function selectPreset(id: PresetId) {
     const preset = getPreset(id);
     if (preset) {
-      setLang(preset.values);
+      setLang((current) => ({
+        ...preset.values,
+        designBrief: {
+          ...getBrief(current),
+          tone: toneForPreset(id),
+        },
+      }));
+      setShowDirections(false);
     }
   }
 
@@ -113,10 +126,14 @@ export default function Page() {
   }
 
   function randomize() {
-    setLang(getRandomDesign());
+    setLang((current) => ({
+      ...getRandomDesign(),
+      designBrief: getBrief(current),
+    }));
+    setShowDirections(false);
   }
 
-  function handleGuidedComplete(presetId: PresetId, mode: ThemeMode) {
+  function handleGuidedComplete(presetId: PresetId, mode: ThemeMode, designBrief = getBrief(lang)) {
     const preset = getPreset(presetId);
     if (preset) {
       const design = { ...preset.values };
@@ -124,8 +141,10 @@ export default function Page() {
         design.mode = mode;
         design.colors = invertPalette(design.colors, mode === "dark");
       }
+      design.designBrief = designBrief;
       setLang(design);
     }
+    setShowDirections(false);
     setView("editor");
   }
 
@@ -200,12 +219,12 @@ export default function Page() {
             <button
               onClick={randomize}
               title="Surprise me — random preset + variant"
-              className="rounded-md border border-white/10 px-2.5 py-1 text-[11px] text-white/40 transition-colors hover:border-white/20 hover:text-white/70"
+              className="rounded-md border border-white/10 px-2.5 py-1 text-[11px] text-white/45 transition-colors hover:border-white/20 hover:text-white/75 sm:min-w-0"
             >
-              Surprise me
+              Surprise
             </button>
           </div>
-          <div className="flex items-center gap-2 text-[11px] text-white/30">
+          <div className="hidden items-center gap-2 text-[11px] text-white/35 sm:flex">
             <span>by</span>
             <span className="text-white/50">Upcurious</span>
           </div>
@@ -241,18 +260,43 @@ export default function Page() {
               {/* Instruction */}
               <div className="border-b border-white/10 px-3 py-3">
                 <p className="text-[11px] leading-relaxed text-white/50">
-                  Pick a mood, then{" "}
+                  Answer the brief, tune the language, then{" "}
                   <span className="text-white/80">Copy prompt</span>{" "}
-                  to paste into Cursor, Claude, or ChatGPT.
+                  into Cursor, Claude, or ChatGPT.
                 </p>
               </div>
 
-              {/* Mood picker — always visible */}
-              <div className="border-b border-white/5 px-3 py-3">
-                <MoodPicker
-                  selectedId={lang.presetId}
-                  onSelect={selectPreset}
+              <div className="border-b border-white/10 px-3 py-3">
+                <LanguageSummary lang={lang} />
+              </div>
+
+              <div className="border-b border-white/10 px-3 py-3">
+                <BriefSection
+                  compact
+                  brief={getBrief(lang)}
+                  onChange={(designBrief) => setLang((l) => ({ ...l, designBrief }))}
                 />
+              </div>
+
+              {/* Mood picker — collapsed after a direction is chosen */}
+              <div className="border-b border-white/5 px-3 py-3">
+                <button
+                  onClick={() => setShowDirections((p) => !p)}
+                  className="flex w-full items-center justify-between rounded-md px-1 py-1 text-left text-xs text-white/55 transition-colors hover:text-white/80"
+                >
+                  <span className="font-medium">Change direction</span>
+                  <span className="text-[10px] text-white/30">
+                    {showDirections ? "Hide" : lang.presetId ?? "Open"}
+                  </span>
+                </button>
+                {showDirections && (
+                  <div className="mt-3">
+                    <MoodPicker
+                      selectedId={lang.presetId}
+                      onSelect={selectPreset}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Customize toggle */}

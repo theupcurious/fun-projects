@@ -70,29 +70,30 @@ export function ExportBar({ lang, onReset }: ExportBarProps) {
     <div className="flex flex-col border-t border-white/10 bg-[#0d0d0d]">
       {/* Prompt preview panel */}
       {showPrompt && (
-        <div className="relative border-b border-white/10 bg-[#111111]">
-          <div className="flex items-center justify-between border-b border-white/5 px-4 py-2">
+        <div className="fixed inset-0 z-50 flex flex-col border-b border-white/10 bg-[#111111] sm:relative sm:inset-auto sm:z-auto">
+          <div className="flex shrink-0 items-center justify-between border-b border-white/5 px-4 py-3 sm:py-2">
             <div className="text-[11px] uppercase tracking-wider text-white/40">
               Generated prompt
-              <span className="ml-2 text-white/20">
+              <span className="ml-2 hidden text-white/20 sm:inline">
                 — paste into Cursor, Claude, or ChatGPT
               </span>
             </div>
             <button
               onClick={() => setShowPrompt(false)}
-              className="text-white/30 hover:text-white/60 transition-colors"
+              className="rounded-md p-2 text-white/35 transition-colors hover:bg-white/5 hover:text-white/70"
+              aria-label="Close prompt preview"
             >
               <svg viewBox="0 0 10 10" className="h-3 w-3" fill="none">
                 <path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
             </button>
           </div>
-          <div className="max-h-64 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto p-4 sm:max-h-64 sm:flex-none">
             <pre className="whitespace-pre-wrap font-mono text-[12px] leading-relaxed text-white/70">
               {promptText}
             </pre>
           </div>
-          <div className="flex items-center gap-2 border-t border-white/5 px-4 py-2">
+          <div className="flex shrink-0 items-center gap-2 border-t border-white/5 px-4 py-3 sm:py-2">
             <button
               onClick={copyPrompt}
               className={cn(

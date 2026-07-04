@@ -24,7 +24,12 @@ export function ThemeSection({ mode, onChange }: ThemeSectionProps) {
                 : "border-white/10 bg-white/5 text-white/50 hover:bg-white/10"
             )}
           >
-            <span>{m === "light" ? "☀️" : "🌙"}</span>
+            <span
+              className={cn(
+                "h-3.5 w-3.5 rounded-full border",
+                m === "light" ? "border-neutral-300 bg-white" : "border-white/20 bg-neutral-800"
+              )}
+            />
             <span className="capitalize">{m}</span>
           </button>
         ))}

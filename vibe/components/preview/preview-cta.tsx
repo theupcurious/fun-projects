@@ -1,6 +1,7 @@
 "use client";
 
 import type { DesignLanguage } from "@/lib/types";
+import { previewContent } from "@/lib/design-brief";
 import { getButtonStyles } from "./preview-styles";
 
 function getInputStyle(lang: DesignLanguage): React.CSSProperties {
@@ -43,6 +44,7 @@ function getInputStyle(lang: DesignLanguage): React.CSSProperties {
 
 export function PreviewCta({ lang }: { lang: DesignLanguage }) {
   const { colors, shape } = lang;
+  const content = previewContent(lang);
 
   const btnStyle = getButtonStyles(lang);
   const inputStyle = getInputStyle(lang);
@@ -70,10 +72,10 @@ export function PreviewCta({ lang }: { lang: DesignLanguage }) {
           marginBottom: "10px",
         }}
       >
-        Ready to build something distinctive?
+        {content.ctaTitle}
       </h2>
       <p style={{ color: colors.textMuted, marginBottom: "28px", fontSize: "0.9em" }}>
-        Get early access to new templates and presets.
+        {content.ctaBody}
       </p>
 
       <div
@@ -93,7 +95,7 @@ export function PreviewCta({ lang }: { lang: DesignLanguage }) {
           readOnly
         />
         <button style={{ ...btnStyle, padding: "8px 20px", cursor: "pointer", whiteSpace: "nowrap" as const }}>
-          Join waitlist
+          {content.ctaAction}
         </button>
       </div>
     </section>

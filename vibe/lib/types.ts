@@ -15,6 +15,13 @@ export type LinkTreatment = "underline" | "color-only" | "arrow";
 export type HeadingTransform = "none" | "uppercase" | "italic";
 export type ThemeMode = "light" | "dark";
 export type PromptFormat = "markdown" | "system" | "cursorrules";
+export type ProjectType = "landing" | "dashboard" | "portfolio" | "tool" | "content" | "commerce";
+export type ToneAxisKey =
+  | "energy"
+  | "warmth"
+  | "structure"
+  | "maturity"
+  | "density";
 export type PresetId =
   | "editorial"
   | "minimal"
@@ -79,4 +86,19 @@ export interface DesignLanguage {
   shape: Shape;
   components: ComponentStyle;
   mode: ThemeMode;
+  designBrief?: DesignBrief;
+}
+
+export interface ToneProfile {
+  energy: number; // 0 calm, 4 energetic
+  warmth: number; // 0 cool, 4 warm
+  structure: number; // 0 expressive, 4 utilitarian
+  maturity: number; // 0 approachable, 4 premium
+  density: number; // 0 airy, 4 dense
+}
+
+export interface DesignBrief {
+  projectType: ProjectType;
+  tone: ToneProfile;
+  avoidances: string[];
 }

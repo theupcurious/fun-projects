@@ -1,5 +1,6 @@
 import type { DesignLanguage } from "./types";
 import { DEFAULT_DESIGN } from "./presets";
+import { DEFAULT_BRIEF } from "./design-brief";
 
 function safeEncode(obj: unknown): string {
   try {
@@ -47,6 +48,17 @@ export function decodeHashToDesign(hash: string): DesignLanguage | null {
     components: {
       ...DEFAULT_DESIGN.components,
       ...(partial.components ?? {}),
+    },
+    designBrief: {
+      ...DEFAULT_BRIEF,
+      ...DEFAULT_DESIGN.designBrief,
+      ...(partial.designBrief ?? {}),
+      tone: {
+        ...DEFAULT_BRIEF.tone,
+        ...DEFAULT_DESIGN.designBrief?.tone,
+        ...(partial.designBrief?.tone ?? {}),
+      },
+      avoidances: partial.designBrief?.avoidances ?? DEFAULT_DESIGN.designBrief?.avoidances ?? DEFAULT_BRIEF.avoidances,
     },
   };
 }

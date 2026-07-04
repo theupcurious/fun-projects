@@ -67,10 +67,6 @@ function FontPicker({
   })();
 
   useEffect(() => {
-    setHighlightIndex(-1);
-  }, [query]);
-
-  useEffect(() => {
     if (highlightIndex >= 0 && listRef.current) {
       const items = listRef.current.querySelectorAll("button");
       items[highlightIndex]?.scrollIntoView({ block: "nearest" });
@@ -96,7 +92,10 @@ function FontPicker({
             <input
               autoFocus
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setHighlightIndex(-1);
+              }}
               placeholder="Search fonts…"
               className="w-full bg-transparent text-xs text-white/80 placeholder:text-white/30 outline-none"
               onKeyDown={(e) => {
