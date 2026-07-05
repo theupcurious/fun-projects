@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, FormEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, X } from "lucide-react";
+import { ArrowRight, Clock3, Search, X } from "lucide-react";
 
 const HISTORY_KEY = "og-previewer-history";
 const MAX_HISTORY = 10;
@@ -34,7 +34,11 @@ export function UrlInput({ onSubmit, isLoading }: UrlInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setHistory(loadHistory());
+    const id = window.setTimeout(() => {
+      setHistory(loadHistory());
+    }, 0);
+
+    return () => window.clearTimeout(id);
   }, []);
 
   function handleSubmit(e: FormEvent) {
@@ -59,17 +63,17 @@ export function UrlInput({ onSubmit, isLoading }: UrlInputProps) {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      <form onSubmit={handleSubmit} className="flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+    <div className="min-w-0 w-full max-w-full">
+      <form onSubmit={handleSubmit} className="flex min-w-0 flex-col gap-2 lg:flex-row">
+        <div className="relative min-w-0 flex-1">
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
           <Input
             ref={inputRef}
             type="text"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="Paste any public URL…"
-            className="pl-10 pr-4 h-12 text-base bg-zinc-800 border-zinc-600 text-white placeholder:text-zinc-500 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500 transition-all"
+            placeholder="Paste any public URL..."
+            className="h-11 rounded-md border-zinc-300 bg-white pl-10 pr-4 text-sm text-zinc-950 shadow-none placeholder:text-zinc-400 focus-visible:border-zinc-950 focus-visible:ring-2 focus-visible:ring-zinc-950/10 focus-visible:ring-offset-0"
             disabled={isLoading}
             autoComplete="off"
             spellCheck={false}
@@ -79,23 +83,29 @@ export function UrlInput({ onSubmit, isLoading }: UrlInputProps) {
         <Button
           type="submit"
           disabled={isLoading || !value.trim()}
-          className="h-12 px-6 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors disabled:opacity-40"
+          className="h-11 rounded-md bg-zinc-950 px-4 font-semibold text-white shadow-none transition-colors hover:bg-zinc-800 disabled:opacity-40"
         >
           {isLoading ? (
             <span className="flex items-center gap-2">
-              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Fetching…
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/25 border-t-white" />
+              Fetching...
             </span>
           ) : (
-            "Preview"
+            <>
+              Preview
+              <ArrowRight className="h-4 w-4" />
+            </>
           )}
         </Button>
       </form>
 
       {/* Recent history pills */}
       {history.length > 0 && (
-        <div className="mt-3 flex flex-wrap items-center gap-1.5">
-          <span className="text-xs text-zinc-600 font-medium mr-0.5">Recent:</span>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <span className="mr-1 inline-flex items-center gap-1 text-xs font-medium text-zinc-500">
+            <Clock3 className="h-3.5 w-3.5" />
+            Recent
+          </span>
           {history.map((url) => {
             let label = url;
             try {
@@ -106,7 +116,7 @@ export function UrlInput({ onSubmit, isLoading }: UrlInputProps) {
                 key={url}
                 onClick={() => handleHistoryClick(url)}
                 title={url}
-                className="text-xs px-2 py-0.5 rounded-full bg-zinc-700 text-zinc-300 hover:bg-zinc-600 hover:text-white transition-colors truncate max-w-[160px]"
+                className="max-w-[170px] truncate rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-xs text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-950"
               >
                 {label}
               </button>
@@ -114,10 +124,10 @@ export function UrlInput({ onSubmit, isLoading }: UrlInputProps) {
           })}
           <button
             onClick={clearHistory}
-            className="text-xs text-zinc-500 hover:text-zinc-300 ml-1 flex items-center gap-0.5 transition-colors"
+            className="ml-1 flex items-center gap-0.5 text-xs text-zinc-500 transition-colors hover:text-zinc-950"
             title="Clear history"
           >
-            <X className="w-3 h-3" />
+            <X className="h-3 w-3" />
             Clear
           </button>
         </div>

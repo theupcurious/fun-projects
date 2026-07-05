@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, DM_Sans } from "next/font/google";
 import "./globals.css";
 
@@ -33,6 +33,11 @@ export const metadata: Metadata = {
       "Instantly preview how any URL will look when shared on X, WhatsApp, and Slack.",
     site: "@upcurious",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
