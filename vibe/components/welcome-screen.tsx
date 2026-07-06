@@ -201,7 +201,7 @@ export function WelcomeScreen({ onStartGuided, onSkip, onSelectPreset }: Welcome
               Upcurious Presents
             </p>
             <h1 className="max-w-2xl text-5xl font-semibold leading-[0.95] tracking-tight text-white md:text-7xl">
-              Your AI app does not need to look AI-made.
+              Give your interface a point of view before you build.
             </h1>
             <p className="mt-6 max-w-xl text-base leading-7 text-white/55 md:text-lg">
               Vibe turns a few product and taste choices into a design-language prompt your coding tools can actually follow.
